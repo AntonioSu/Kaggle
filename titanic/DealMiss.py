@@ -139,7 +139,7 @@ class DealMiss(object):
         print('done')
         return train,test
 
-class FeatureEngineering(object):
+class FeatureEngineering():
     def __init__(self):
         super()
         miss=DealMiss()
@@ -289,11 +289,13 @@ class FeatureEngineering(object):
         train, test = self.FamilySize(train, test)
         train, test = self.Fare(train, test)
 
+        print(train)
         train.drop(['Ticket'], axis=1, inplace=True)
         test.drop(['Ticket'], axis=1, inplace=True)
         train.drop(['PassengerId'], axis=1, inplace=True)
         test.drop(['PassengerId'], axis=1, inplace=True)
 
+        # 经过get_dummies步骤，将特征转化为0、1
         train = pd.get_dummies(train, columns=['title', "Pclass", 'Cabin', 'Embarked', 'nLength_group', 'family_group',
                                                'fare_group'], drop_first=False)
         test = pd.get_dummies(test, columns=['title', "Pclass", 'Cabin', 'Embarked', 'nLength_group', 'family_group',
@@ -305,19 +307,20 @@ class FeatureEngineering(object):
         y = train["Survived"]
         X = train.drop(['Survived'], axis=1)
         train_x, test_x, train_y, test_y = train_test_split(X, y, test_size=.33, random_state=0)
-
+        print(train_x)
         ## transforming "train_x"
-        train_x = self.sc.fit_transform(train_x)
+        train_x_forsform = self.sc.fit_transform(train_x)
+        print(train_x_forsform)
         ## transforming "train_x"
         test_x = self.sc.transform(test_x)
 
         ## transforming "The testset"
         test = self.sc.transform(test)
-        return train_x, train_y,test_x, test_y,test
+        return train_x_forsform, train_y,test_x, test_y,test
 
 
-# if __name__=='__main__':
+if __name__=='__main__':
 #     text=DealMiss()
-#     FE=FeatureEngineering()
+    FE=FeatureEngineering()
 #     train,test=text.calls()
-#     train,test,x,y,test=FE.calls()
+    train,test,x,y,test=FE.calls()
